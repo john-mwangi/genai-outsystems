@@ -5,7 +5,9 @@ respond to questions about the OutSystems platform.
 
 # Data Sources
 It uses an open source LLM and has been finetuned on the following data sources:
-- [OutSystems Website](https://www.outsystems.com/)
+- [OutSystems 11 Documentation](https://success.outsystems.com/documentation/11/)
+- [OutSystems Best Practices](https://success.outsystems.com/documentation/Best_Practices)
+- [OutSystems How To Guides](https://success.outsystems.com/documentation/How_to_Guides)
 - [OutSystems YouTube](https://www.youtube.com/@outsystems)
 
 # LLM
