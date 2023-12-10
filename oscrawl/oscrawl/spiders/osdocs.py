@@ -10,7 +10,7 @@ class OsdocsSpider(scrapy.Spider):
     name = "osdocs"
     allowed_domains = ["outsystems.com"]
     start_urls = [
-        "https://outsystems.com/documentation/11/",
+        "https://success.outsystems.com/documentation/11/",
         "https://success.outsystems.com/documentation/Best_Practices",
         "https://success.outsystems.com/documentation/How_to_Guides",
     ]
