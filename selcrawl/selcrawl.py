@@ -1,35 +1,27 @@
-from html2text import HTML2Text
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
 
-def main():
+def get_driver():
     options = Options()
     options.add_argument("--enable-javascript")
+    options.add_argument("start-maximized")
 
     webdriver_service = Service(executable_path="./chromedriver")
-    driver = webdriver.Chrome(service=webdriver_service, options=options)
+    driver = webdriver.Chrome(options=options, service=webdriver_service)
 
-    url = "https://success.outsystems.com/documentation/11/"
-    driver.get(url)
-    driver.implicitly_wait(30)
-
-    page_source = driver.page_source
-
-    converter = HTML2Text()
-    converter.ignore_emphasis = True
-    converter.ignore_images = True
-    converter.ignore_links = True
-    converter.ignore_tables = True
-
-    text = converter.handle(page_source).strip()
-
-    with open("output.txt", mode="w") as f:
-        f.write(text)
-
-    driver.quit()
+    return driver
 
 
 if __name__ == "__main__":
-    main()
+    driver = get_driver()
+    url = "https://success.outsystems.com/documentation/11/"
+    driver.get(url)
+    page_source = driver.execute_script("return document.documentElement.outerHTML")
+    source_text = BeautifulSoup(page_source, "html.parser")
+    print(source_text.find_all("noscript"))
+
+    while True:
+        pass
