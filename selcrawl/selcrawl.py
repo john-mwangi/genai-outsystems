@@ -19,7 +19,7 @@ if __name__ == "__main__":
     driver = get_driver()
     url = "https://success.outsystems.com/documentation/11/"
     driver.get(url)
-    page_source = driver.execute_script("return document.documentElement.outerHTML")
+    page_source = driver.page_source
     source_text = BeautifulSoup(page_source, "html.parser")
     print(source_text.find_all("noscript"))
 
