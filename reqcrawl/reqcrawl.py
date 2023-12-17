@@ -54,10 +54,10 @@ def parse_data(data: list[dict]):
 
 
 if __name__ == "__main__":
-    url = "https://success.outsystems.com/screenservices/Documentation_UI/TOC/LeftTableOfContents/DataActionGetLeftToCDataSource"
+    toc = "https://success.outsystems.com/screenservices/Documentation_UI/TOC/LeftTableOfContents/DataActionGetLeftToCDataSource"
 
     response = requests.post(
-        url=url,
+        url=toc,
         headers=headers,
         json=request_body,
     )
