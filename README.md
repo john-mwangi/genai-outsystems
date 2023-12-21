@@ -1,4 +1,3 @@
-# genai-outsystems
 # About
 GenAI for OutSystems. This is a project to create a GenAI application that can
 respond to questions about the OutSystems platform.
