@@ -1,5 +1,6 @@
 import subprocess
 import time
+from typing import Union
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
@@ -8,11 +9,11 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 
 
-def clean_path(path: str):
+def clean_path(path: str) -> str:
     return path.split(sep=":", maxsplit=1)[1].split()[0]
 
 
-def install_driver(browser: str = "firefox"):
+def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
     cmd = f"selenium-manager --browser {browser}"
 
     result = subprocess.run(cmd, capture_output=True, shell=True, text=True)
@@ -23,15 +24,16 @@ def install_driver(browser: str = "firefox"):
     browser_path = [line for line in lines if line.startswith("INFO\tBrowser path:")]
 
     if driver_path:
-        driver_path = clean_path(driver_path[0])
-        browser_path = clean_path(browser_path[0])
+        driver_clean = clean_path(driver_path[0])
+        browser_clean = clean_path(browser_path[0])
 
-        print("Driver path:", driver_path)
-        print("Browser path:", browser_path)
+        print("Driver path:", driver_clean)
+        print("Browser path:", browser_clean)
 
-        return driver_path, browser_path
+        return driver_clean, browser_clean
     else:
         print("Driver not found.")
+        return None
 
 
 def get_driver():
