@@ -59,6 +59,8 @@ if __name__ == "__main__":
 
     print("sending keys...")
     actions = ActionChains(driver)
+
+    # Open devtools: Cmd+Options+i
     options_key = "\u2325"
 
     (
