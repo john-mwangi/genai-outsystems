@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import time
+import tkinter
 from typing import Union
 
 import pyautogui
@@ -59,12 +60,11 @@ if __name__ == "__main__":
     driver = get_driver()
     driver.get(url)
 
-    print(f"waiting for {PAGE_LOAD_TIME} sec...")
+    print(f"waiting for {PAGE_LOAD_TIME=} sec...")
     time.sleep(PAGE_LOAD_TIME)
 
-    print("sending keys...")
-    actions = ActionChains(driver)
-    actions.send_keys(Keys.TAB).send_keys(Keys.ENTER).perform()
+    # accept cookies
+    ActionChains(driver).send_keys(Keys.TAB).send_keys(Keys.ENTER).perform()
 
     # open devtools
     # https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     time.sleep(3)
 
-    # # print X, Y coordinates
+    # # print X, Y positions
     # print("Press Ctrl-C to quit.")
     # try:
     #     while True:
@@ -86,11 +86,20 @@ if __name__ == "__main__":
     # except KeyboardInterrupt:
     #     print("\n")
 
+    # copy React generated code
     X = 984
     Y = 204
 
     pyautogui.click(button="right", x=X, y=Y)
-    print("done")
+    pyautogui.press("down", presses=6)
+    pyautogui.press("right")
+    pyautogui.press("down")
+    pyautogui.press("enter")
 
-    while True:
-        pass
+    # paste content as string
+    react_html = tkinter.Tk().clipboard_get()
+
+    with open("output.html", mode="w") as f:
+        f.write(react_html)
+
+    driver.quit()
