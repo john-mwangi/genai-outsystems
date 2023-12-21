@@ -2,9 +2,11 @@ import subprocess
 import sys
 import time
 import tkinter
+from pathlib import Path
 from typing import Union
 
 import pyautogui
+from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -113,17 +115,40 @@ def extract_react_html(url: str, page_load_time: int = 30):
     pyautogui.press("down", presses=6)
     pyautogui.press("right")
     pyautogui.press("down")
-    pyautogui.press("enter")
+    pyautogui.press("enter")  # FIXME
 
     # Paste content as string
     react_html = tkinter.Tk().clipboard_get()
 
-    with open(f"{hash(url)}.html", mode="w") as f:
+    dir_name = Path("html_files")
+
+    if not dir_name.exists():
+        dir_name.mkdir()
+
+    file_path = dir_name / f"{hash(url)}.html"
+
+    with open(file_path, mode="w") as f:
         f.write(react_html)
 
     driver.quit()
 
 
+def parse_html(html: str):
+    soup = BeautifulSoup(html, "html.parser")
+    text = soup.find_all("div", {"data-container-id": "b3-b4-b1-InjectHTMLWrapper"})
+
+    print(text)
+
+
 if __name__ == "__main__":
     url = "https://success.outsystems.com/documentation/11/getting_started/"
-    extract_react_html(url)
+    # extract_react_html(url)
+
+    html_files = Path("html_files").glob("*.html")
+
+    file = list(html_files)[0]
+
+    with open(file, mode="r") as f:
+        html = f.read()
+
+    parse_html(html)
