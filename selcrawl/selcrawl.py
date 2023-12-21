@@ -17,6 +17,18 @@ def clean_path(path: str) -> str:
 
 
 def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
+    """Installs the appropriate web driver.
+
+    Args:
+    ---
+    brower: browser driver to install. See `$selenium-manager --help` for options
+
+    Returns:
+    ---
+    driver_clean: driver absolute path
+    browser_clean: binaries absolute path
+    """
+
     cmd = f"selenium-manager --browser {browser}"
 
     result = subprocess.run(cmd, capture_output=True, shell=True, text=True)
@@ -53,20 +65,26 @@ def get_driver():
     return driver
 
 
-if __name__ == "__main__":
-    url = "https://success.outsystems.com/documentation/11/getting_started/"
-    PAGE_LOAD_TIME = 30
+def extract_react_html(url: str, page_load_time: int = 30):
+    """Extracts React generated HTML from the browser's devtools and saves the
+    content locally.
+
+    Args:
+    ---
+    url: the page to extract html content
+    page_load_time: time in secs to allow for the page to load
+    """
 
     driver = get_driver()
     driver.get(url)
 
-    print(f"waiting for {PAGE_LOAD_TIME=} sec...")
-    time.sleep(PAGE_LOAD_TIME)
+    print(f"waiting for {page_load_time=} sec...")
+    time.sleep(page_load_time)
 
-    # accept cookies
+    # Accept cookies
     ActionChains(driver).send_keys(Keys.TAB).send_keys(Keys.ENTER).perform()
 
-    # open devtools
+    # Open devtools
     # https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
     cmd_ctrl = ["command", "option"] if sys.platform == "darwin" else ["ctrl", "shift"]
 
@@ -86,7 +104,8 @@ if __name__ == "__main__":
     # except KeyboardInterrupt:
     #     print("\n")
 
-    # copy React generated code
+    # Copy React generated code
+    # TODO: Make this dynamic
     X = 984
     Y = 204
 
@@ -96,10 +115,15 @@ if __name__ == "__main__":
     pyautogui.press("down")
     pyautogui.press("enter")
 
-    # paste content as string
+    # Paste content as string
     react_html = tkinter.Tk().clipboard_get()
 
-    with open("output.html", mode="w") as f:
+    with open(f"{hash(url)}.html", mode="w") as f:
         f.write(react_html)
 
     driver.quit()
+
+
+if __name__ == "__main__":
+    url = "https://success.outsystems.com/documentation/11/getting_started/"
+    extract_react_html(url)
