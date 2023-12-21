@@ -4,15 +4,15 @@ import time
 from typing import Union
 
 import pyautogui
-from selenium.webdriver import Firefox
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 
 
 def clean_path(path: str) -> str:
-    return path.split(sep=":", maxsplit=1)[1].split()[0]
+    return path.split(sep=":", maxsplit=1)[1].strip()
 
 
 def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
@@ -39,14 +39,15 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
 
 
 def get_driver():
-    driver_path, browser_path = install_driver()
+    driver_path, browser_path = install_driver("chrome")
     webdriver_service = Service(executable_path=driver_path)
 
     options = Options()
     options.add_argument("--enable-javascript")
+    options.add_argument("--start-maximized")
     options.binary_location = browser_path
 
-    driver = Firefox(service=webdriver_service, options=options)
+    driver = Chrome(service=webdriver_service, options=options)
 
     return driver
 
@@ -72,6 +73,23 @@ if __name__ == "__main__":
     with pyautogui.hold(cmd_ctrl):
         pyautogui.press("i")
 
+    time.sleep(3)
+
+    # # print X, Y coordinates
+    # print("Press Ctrl-C to quit.")
+    # try:
+    #     while True:
+    #         x, y = pyautogui.position()
+    #         positionStr = "X: " + str(x).rjust(4) + " Y: " + str(y).rjust(4)
+    #         print(positionStr, end="")
+    #         print("\b" * len(positionStr), end="", flush=True)
+    # except KeyboardInterrupt:
+    #     print("\n")
+
+    X = 984
+    Y = 204
+
+    pyautogui.click(button="right", x=X, y=Y)
     print("done")
 
     # Open devtools: Cmd+Options+i
