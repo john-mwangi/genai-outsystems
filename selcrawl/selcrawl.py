@@ -5,6 +5,7 @@ import tkinter
 from pathlib import Path
 from typing import Union
 
+import html2text
 import pyautogui
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
@@ -133,22 +134,42 @@ def extract_react_html(url: str, page_load_time: int = 30):
     driver.quit()
 
 
-def parse_html(html: str):
-    soup = BeautifulSoup(html, "html.parser")
-    text = soup.find_all("div", {"data-container-id": "b3-b4-b1-InjectHTMLWrapper"})
+def parse_html(html: str, file_name: str):
+    """Extract useful content from a html file and save it as a txt file"""
 
-    print(text)
+    soup = BeautifulSoup(html, "html.parser")
+
+    converter = html2text.HTML2Text()
+    converter.ignore_links = True
+    converter.ignore_images = True
+    converter.ignore_tables = True
+
+    content = soup.find("div", id="b3-b4-b1-InjectHTMLWrapper")
+
+    text = converter.handle(str(content))
+
+    dir_name = Path("txt_files")
+
+    if not dir_name.exists():
+        dir_name.mkdir()
+
+    file_path = dir_name / file_name
+
+    with open(file_path, mode="w") as f:
+        f.write(text)
 
 
 if __name__ == "__main__":
     url = "https://success.outsystems.com/documentation/11/getting_started/"
+
     # extract_react_html(url)
 
     html_files = Path("html_files").glob("*.html")
 
-    file = list(html_files)[0]
+    files = list(html_files)
 
-    with open(file, mode="r") as f:
-        html = f.read()
+    for file in files:
+        with open(file, mode="r") as f:
+            html = f.read()
 
-    parse_html(html)
+        parse_html(html, f"{file.stem}.txt")
