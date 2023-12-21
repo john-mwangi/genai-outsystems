@@ -1,7 +1,9 @@
 import subprocess
+import sys
 import time
 from typing import Union
 
+import pyautogui
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
@@ -50,8 +52,8 @@ def get_driver():
 
 
 if __name__ == "__main__":
-    url = "https://success.outsystems.com/documentation/11/"
-    PAGE_LOAD_TIME = 60
+    url = "https://success.outsystems.com/documentation/11/getting_started/"
+    PAGE_LOAD_TIME = 30
 
     driver = get_driver()
     driver.get(url)
@@ -61,20 +63,19 @@ if __name__ == "__main__":
 
     print("sending keys...")
     actions = ActionChains(driver)
+    actions.send_keys(Keys.TAB).send_keys(Keys.ENTER).perform()
+
+    # open devtools
+    # https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
+    cmd_ctrl = ["command", "option"] if sys.platform == "darwin" else ["ctrl", "shift"]
+
+    with pyautogui.hold(cmd_ctrl):
+        pyautogui.press("i")
+
+    print("done")
 
     # Open devtools: Cmd+Options+i
     options_key = "\u2325"
-
-    (
-        actions.send_keys(Keys.TAB)
-        .send_keys(Keys.ENTER)
-        .key_down(Keys.COMMAND)
-        .send_keys("f")
-        .key_up(Keys.COMMAND)
-        .perform()
-    )
-
-    print("done")
 
     while True:
         pass
