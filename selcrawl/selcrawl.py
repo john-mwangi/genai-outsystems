@@ -92,8 +92,5 @@ if __name__ == "__main__":
     pyautogui.click(button="right", x=X, y=Y)
     print("done")
 
-    # Open devtools: Cmd+Options+i
-    options_key = "\u2325"
-
     while True:
         pass
