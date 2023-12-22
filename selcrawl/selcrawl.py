@@ -16,6 +16,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 DEFAULT_WAIT_TIME = 2
+PAGE_LOAD_TIME = 30
 
 
 class ContentType(Enum):
@@ -76,7 +77,7 @@ def get_driver():
     return driver
 
 
-def extract_react_html(url: str, page_load_time: int = 30):
+def extract_react_html(url: str, page_load_time: int = PAGE_LOAD_TIME):
     """Extracts React generated HTML from the browser's devtools and saves the
     content locally.
 
