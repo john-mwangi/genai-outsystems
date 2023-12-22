@@ -15,6 +15,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
+DEFAULT_WAIT_TIME = 2
+
 
 class ContentType(Enum):
     HTML = "html_files"
@@ -100,7 +102,7 @@ def extract_react_html(url: str, page_load_time: int = 30):
     with pyautogui.hold(cmd_ctrl):
         pyautogui.press("i")
 
-    time.sleep(3)
+    time.sleep(DEFAULT_WAIT_TIME)
 
     # # print X, Y positions
     # print("Press Ctrl-C to quit.")
@@ -122,7 +124,8 @@ def extract_react_html(url: str, page_load_time: int = 30):
     pyautogui.press("down", presses=6)
     pyautogui.press("right")
     pyautogui.press("down")
-    pyautogui.press("enter")  # FIXME
+    pyautogui.press("return")
+    time.sleep(DEFAULT_WAIT_TIME)
 
     # Paste content as string
     react_html = tkinter.Tk().clipboard_get()
