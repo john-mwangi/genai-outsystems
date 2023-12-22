@@ -64,8 +64,8 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
         return None
 
 
-def get_driver():
-    driver_path, browser_path = install_driver("chrome")
+def get_driver(browser: str = "chrome"):
+    driver_path, browser_path = install_driver(browser)
     webdriver_service = Service(executable_path=driver_path)
 
     options = Options()
