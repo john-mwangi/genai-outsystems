@@ -53,11 +53,9 @@ def parse_data(data: list[dict]):
                     yield from parse_data(nested_list)
 
 
-if __name__ == "__main__":
-    toc = "https://success.outsystems.com/screenservices/Documentation_UI/TOC/LeftTableOfContents/DataActionGetLeftToCDataSource"
-
+def main(url: str):
     response = requests.post(
-        url=toc,
+        url=url,
         headers=headers,
         json=request_body,
     )
@@ -67,6 +65,16 @@ if __name__ == "__main__":
         response_body = response.json()
 
     data = response_body["data"]["Hierarchy"]["List"]
-    urls = list(parse_data(data))
+    urls = list(set(parse_data(data)))
 
-    print(f"{len(urls)=}")
+    print("urls retrived:", len(urls))
+
+    with open("urls.txt", mode="w") as f:
+        for url in urls:
+            f.write(url + "\n")
+
+
+if __name__ == "__main__":
+    toc = "https://success.outsystems.com/screenservices/Documentation_UI/TOC/LeftTableOfContents/DataActionGetLeftToCDataSource"
+
+    main(toc)
