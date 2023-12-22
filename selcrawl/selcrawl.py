@@ -15,8 +15,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-DEFAULT_WAIT_TIME = 2
-PAGE_LOAD_TIME = 30
+DEFAULT_WAIT_TIME: int = 2
+PAGE_LOAD_TIME: int = 15
+URLS_LIMIT: Union[int, None] = 3
 
 
 class ContentType(Enum):
@@ -203,6 +204,11 @@ def main(url: str):
 
 
 if __name__ == "__main__":
-    url = "https://success.outsystems.com/documentation/11/getting_started/"
+    with open("urls.txt") as f:
+        urls = [line.strip() for line in f.readlines()]
 
-    main(url)
+    if URLS_LIMIT is not None:
+        urls = urls[:URLS_LIMIT]
+
+    for url in urls:
+        main(url)
