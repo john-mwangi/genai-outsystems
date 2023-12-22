@@ -67,6 +67,10 @@ if __name__ == "__main__":
         response_body = response.json()
 
     data = response_body["data"]["Hierarchy"]["List"]
-    urls = list(parse_data(data))
+    urls = list(set(parse_data(data)))
 
-    print(f"{len(urls)=}")
+    print("urls retrived:", len(urls))
+
+    with open("urls.txt", mode="w") as f:
+        for url in urls:
+            f.write(url + "\n")
