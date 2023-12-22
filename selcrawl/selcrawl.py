@@ -2,6 +2,7 @@ import subprocess
 import sys
 import time
 import tkinter
+from enum import Enum
 from pathlib import Path
 from typing import Union
 
@@ -13,6 +14,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+
+
+class ContentType(Enum):
+    HTML = "html_files"
+    TEXT = "txt_files"
 
 
 def clean_path(path: str) -> str:
@@ -121,12 +127,13 @@ def extract_react_html(url: str, page_load_time: int = 30):
     # Paste content as string
     react_html = tkinter.Tk().clipboard_get()
 
-    dir_name = Path("html_files")
+    dir_name = Path(ContentType.HTML.value)
 
     if not dir_name.exists():
         dir_name.mkdir()
 
-    file_path = dir_name / f"{hash(url)}.html"
+    page_name = url.split("/")[-2]
+    file_path = dir_name / f"{page_name}.html"
 
     with open(file_path, mode="w") as f:
         f.write(react_html)
@@ -136,6 +143,8 @@ def extract_react_html(url: str, page_load_time: int = 30):
 
 def parse_html(html: str, file_name: str):
     """Extract useful content from a html file and save it as a txt file"""
+
+    print(f"Converting to text {file_name}...")
 
     soup = BeautifulSoup(html, "html.parser")
 
@@ -148,7 +157,7 @@ def parse_html(html: str, file_name: str):
 
     text = converter.handle(str(content))
 
-    dir_name = Path("txt_files")
+    dir_name = Path(ContentType.TEXT.value)
 
     if not dir_name.exists():
         dir_name.mkdir()
@@ -159,17 +168,37 @@ def parse_html(html: str, file_name: str):
         f.write(text)
 
 
+def page_parsed(page_name: str, type: ContentType):
+    """Determines if a url's html content has been extracted or converted to text"""
+
+    file_extension = type.value.split("_")[0]
+    dir_name = type.value
+
+    files = Path(dir_name).glob(f"*.{file_extension}")
+    return any([file.stem == page_name for file in files])
+
+
+def main(url: str):
+    page_name = url.split("/")[-2]
+
+    html_parsed = page_parsed(page_name, type=ContentType.HTML)
+    txt_parsed = page_parsed(page_name, type=ContentType.TEXT)
+
+    if not html_parsed:
+        extract_react_html(url)
+
+    if not txt_parsed:
+        html_files = Path(ContentType.HTML.value).glob("*.html")
+        files = list(html_files)
+
+        for file in files:
+            with open(file, mode="r") as f:
+                html = f.read()
+
+            parse_html(html, f"{file.stem}.txt")
+
+
 if __name__ == "__main__":
     url = "https://success.outsystems.com/documentation/11/getting_started/"
 
-    # extract_react_html(url)
-
-    html_files = Path("html_files").glob("*.html")
-
-    files = list(html_files)
-
-    for file in files:
-        with open(file, mode="r") as f:
-            html = f.read()
-
-        parse_html(html, f"{file.stem}.txt")
+    main(url)
