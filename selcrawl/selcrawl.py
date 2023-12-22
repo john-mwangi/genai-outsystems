@@ -183,6 +183,7 @@ def page_parsed(page_name: str, type: ContentType):
     return any([file.stem == page_name for file in files])
 
 
+# TODO: implement asynchronous func
 def main(url: str):
     page_name = url.split("/")[-2]
 
