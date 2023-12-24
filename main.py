@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from src.params import URLS_LIMIT, urls_path
 from src.scrape_website import ContentType, extract_react_html, page_parsed, parse_html
 
@@ -15,7 +13,7 @@ def main(url: str):
         extract_react_html(url)
 
     if not txt_parsed:
-        html_files = Path(ContentType.HTML.value).glob("*.html")
+        html_files = ContentType.HTML.value.glob("*.html")
         files = list(html_files)
 
         for file in files:

@@ -3,7 +3,6 @@ import sys
 import time
 import tkinter
 from enum import Enum
-from pathlib import Path
 from typing import Union
 
 import html2text
@@ -126,7 +125,7 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
     # Paste content as string
     react_html = tkinter.Tk().clipboard_get()
 
-    dir_name = Path(ContentType.HTML.value)
+    dir_name = ContentType.HTML.value
 
     if not dir_name.exists():
         dir_name.mkdir()
@@ -156,7 +155,7 @@ def parse_html(html: str, file_name: str):
 
     text = converter.handle(str(content))
 
-    dir_name = Path(ContentType.TEXT.value)
+    dir_name = ContentType.TEXT.value
 
     if not dir_name.exists():
         dir_name.mkdir()
