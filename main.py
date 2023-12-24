@@ -15,7 +15,7 @@ def main(url: str):
         extract_react_html(url)
 
     if not txt_parsed:
-        html_files = Path(ContentType.HTML.value).glob("*.html")
+        html_files = ContentType.HTML.value.glob("*.html")
         files = list(html_files)
 
         for file in files:

@@ -67,7 +67,7 @@ def main(url: str):
         response_body = response.json()
 
     data = response_body["data"]["Hierarchy"]["List"]
-    urls = list(set(parse_data(data)))
+    urls = sorted(set(parse_data(data)))
 
     print("urls retrived:", len(urls))
 
