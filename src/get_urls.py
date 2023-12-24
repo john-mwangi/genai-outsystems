@@ -63,8 +63,9 @@ def main(url: str):
     )
 
     print(f"{response.status_code=}")
-    if response.status_code == 200:
-        response_body = response.json()
+    assert response.status_code == 200, "Response status code is not 200"
+
+    response_body = response.json()
 
     data = response_body["data"]["Hierarchy"]["List"]
     urls = sorted(set(parse_data(data)))
