@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from src.params import URLS_LIMIT, urls_path
 from src.scrape_website import ContentType, extract_react_html, page_parsed, parse_html
 

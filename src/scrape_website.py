@@ -3,7 +3,6 @@ import sys
 import time
 import tkinter
 from enum import Enum
-from pathlib import Path
 from typing import Union
 
 import html2text
