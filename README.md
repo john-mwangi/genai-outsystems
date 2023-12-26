@@ -11,3 +11,4 @@ Execute the following command:
 ```
 $python main.py
 ```
+![Alt text](output.gif)
