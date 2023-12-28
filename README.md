@@ -6,7 +6,7 @@ a browser's navigation to the devtool and copying the content from there.
 - Python 3.10
 - Python packages (requirements.txt)
 - A url(s) in: `webscraping/files/urls.txt`
-# Running
+# Usage
 Execute the following command:
 ```
 $python main.py
