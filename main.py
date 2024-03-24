@@ -1,18 +1,23 @@
 from src.params import URLS_LIMIT, urls_path
-from src.scrape_website import ContentType, extract_react_html, page_parsed, parse_html
+from src.scrape_website import (
+    ContentType,
+    extract_react_html,
+    page_parsed,
+    parse_html,
+)
 
 
 # TODO: implement asynchronous (Puppeteer, Playwright)
 def main(url: str):
     page_name = url.split("/")[-2]
 
-    html_parsed = page_parsed(page_name, content_type=ContentType.HTML)
-    txt_parsed = page_parsed(page_name, content_type=ContentType.TEXT)
+    is_html_parsed = page_parsed(page_name, content_type=ContentType.HTML)
+    is_txt_parsed = page_parsed(page_name, content_type=ContentType.TEXT)
 
-    if not html_parsed:
+    if not is_html_parsed:
         extract_react_html(url)
 
-    if not txt_parsed:
+    if not is_txt_parsed:
         html_files = ContentType.HTML.value.glob("*.html")
         files = list(html_files)
 
