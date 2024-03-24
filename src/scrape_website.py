@@ -38,6 +38,7 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
     driver_clean: driver absolute path
     browser_clean: binaries absolute path
     """
+    print(f"Installing {browser} driver...")
 
     cmd = f"selenium-manager --browser {browser}"
 
@@ -58,6 +59,8 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
 
         print("Driver path:", driver_clean)
         print("Browser path:", browser_clean)
+
+        print(f"{browser} driver successfully installed.")
 
         return driver_clean, browser_clean
     else:
@@ -89,7 +92,12 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
     page_load_time: time in secs to allow for the page to load
     """
 
-    driver = get_driver()
+    # driver = get_driver()
+    options = Options()
+    options.browser_version = params.CHROME_VERSION
+    options.add_argument("--enable-javascript")
+    options.add_argument("--start-maximized")
+    driver = Chrome(options=options)
     driver.get(url)
 
     print(f"waiting for {page_load_time=} sec...")
