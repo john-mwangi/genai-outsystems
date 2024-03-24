@@ -8,7 +8,7 @@ from src.scrape_website import (
 
 
 # TODO: implement asynchronous (Puppeteer, Playwright)
-def main(url: str):
+def main(url: str, **kwargs):
     page_name = url.split("/")[-2]
 
     is_html_parsed = page_parsed(page_name, content_type=ContentType.HTML)
@@ -25,12 +25,7 @@ def main(url: str):
             with open(file, mode="r") as f:
                 html = f.read()
 
-            parse_html(
-                html,
-                f"{file.stem}.txt",
-                name="div",
-                id="b3-b4-b1-InjectHTMLWrapper",
-            )
+            parse_html(html, f"{file.stem}.txt", **kwargs)
 
 
 if __name__ == "__main__":
@@ -41,4 +36,4 @@ if __name__ == "__main__":
         urls = urls[:URLS_LIMIT]
 
     for url in urls:
-        main(url)
+        main(url, name="div", id="b3-b4-b1-InjectHTMLWrapper")
