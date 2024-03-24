@@ -38,6 +38,7 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
     driver_clean: driver absolute path
     browser_clean: binaries absolute path
     """
+    print(f"Installing {browser} driver...")
 
     cmd = f"selenium-manager --browser {browser}"
 
@@ -45,8 +46,12 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
 
     lines = result.stdout.splitlines()
 
-    driver_path = [line for line in lines if line.startswith("INFO\tDriver path:")]
-    browser_path = [line for line in lines if line.startswith("INFO\tBrowser path:")]
+    driver_path = [
+        line for line in lines if line.startswith("INFO\tDriver path:")
+    ]
+    browser_path = [
+        line for line in lines if line.startswith("INFO\tBrowser path:")
+    ]
 
     if driver_path:
         driver_clean = clean_path(driver_path[0])
@@ -54,6 +59,8 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
 
         print("Driver path:", driver_clean)
         print("Browser path:", browser_clean)
+
+        print(f"{browser} driver successfully installed.")
 
         return driver_clean, browser_clean
     else:
@@ -85,7 +92,12 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
     page_load_time: time in secs to allow for the page to load
     """
 
-    driver = get_driver()
+    # driver = get_driver()
+    options = Options()
+    options.browser_version = params.CHROME_VERSION
+    options.add_argument("--enable-javascript")
+    options.add_argument("--start-maximized")
+    driver = Chrome(options=options)
     driver.get(url)
 
     print(f"waiting for {page_load_time=} sec...")
@@ -96,7 +108,11 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
 
     # Open devtools
     # https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
-    cmd_ctrl = ["command", "option"] if sys.platform == "darwin" else ["ctrl", "shift"]
+    cmd_ctrl = (
+        ["command", "option"]
+        if sys.platform == "darwin"
+        else ["ctrl", "shift"]
+    )
 
     with pyautogui.hold(cmd_ctrl):
         pyautogui.press("i")
@@ -139,8 +155,21 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
     driver.quit()
 
 
-def parse_html(html: str, file_name: str):
-    """Extract useful content from a html file and save it as a txt file"""
+def parse_html(html: str, file_name: str, save_text: bool = True, **kwargs):
+    """Extract useful content from a html file and save it as a txt file
+
+    Args:
+    ---
+    - html: The html file that will be handled by `html.parser`
+    - file_name: The txt file to write the results of parsing the html
+    - save_text: Whether to save or return the parsed html
+    - kwargs: kwargs to pass to `soup.find_all()`
+
+    Returns
+    ---
+    if save_text=True: Writes the parsed content to a txt file
+    Else, returns a list of the parsed html content
+    """
 
     print(f"Converting to text {file_name}...")
 
@@ -151,9 +180,12 @@ def parse_html(html: str, file_name: str):
     converter.ignore_images = True
     converter.ignore_tables = True
 
-    content = soup.find("div", id="b3-b4-b1-InjectHTMLWrapper")
+    content = soup.find_all(**kwargs)
 
     text = converter.handle(str(content))
+
+    if not save_text:
+        return text
 
     dir_name = ContentType.TEXT.value
 
@@ -169,7 +201,9 @@ def parse_html(html: str, file_name: str):
 def page_parsed(page_name: str, content_type: ContentType):
     """Determines if a url's html content has been extracted or converted to text"""
 
-    file_extension = content_type.value.__str__().split("/")[-1][: -len("_files")]
+    file_extension = content_type.value.__str__().split("/")[-1][
+        : -len("_files")
+    ]
     dir_name = content_type.value
 
     files = dir_name.glob(f"*.{file_extension}")

@@ -1,18 +1,28 @@
 from src.params import URLS_LIMIT, urls_path
-from src.scrape_website import ContentType, extract_react_html, page_parsed, parse_html
+from src.scrape_website import (
+    ContentType,
+    extract_react_html,
+    page_parsed,
+    parse_html,
+)
 
 
 # TODO: implement asynchronous (Puppeteer, Playwright)
-def main(url: str):
+def main(url: str, **kwargs):
+    """
+    Args:
+    ---
+    - kwargs: kwargs to pass to `soup.find_all()`
+    """
     page_name = url.split("/")[-2]
 
-    html_parsed = page_parsed(page_name, content_type=ContentType.HTML)
-    txt_parsed = page_parsed(page_name, content_type=ContentType.TEXT)
+    is_html_parsed = page_parsed(page_name, content_type=ContentType.HTML)
+    is_txt_parsed = page_parsed(page_name, content_type=ContentType.TEXT)
 
-    if not html_parsed:
+    if not is_html_parsed:
         extract_react_html(url)
 
-    if not txt_parsed:
+    if not is_txt_parsed:
         html_files = ContentType.HTML.value.glob("*.html")
         files = list(html_files)
 
@@ -20,7 +30,7 @@ def main(url: str):
             with open(file, mode="r") as f:
                 html = f.read()
 
-            parse_html(html, f"{file.stem}.txt")
+            parse_html(html, f"{file.stem}.txt", **kwargs)
 
 
 if __name__ == "__main__":
@@ -31,4 +41,4 @@ if __name__ == "__main__":
         urls = urls[:URLS_LIMIT]
 
     for url in urls:
-        main(url)
+        main(url, name="div", id="b3-b4-b1-InjectHTMLWrapper")
