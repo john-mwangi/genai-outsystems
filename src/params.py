@@ -11,4 +11,4 @@ htmls_dir = ROOT_DIR / "files/html_files"
 texts_dir = ROOT_DIR / "files/txt_files"
 
 # TODO: Make this dynamic
-right_click_pst = {"x": 984, "y": 204}
+right_click_pst = {"x": 990, "y": 215}
