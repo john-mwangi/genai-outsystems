@@ -12,3 +12,4 @@ texts_dir = ROOT_DIR / "files/txt_files"
 
 # TODO: Make this dynamic
 right_click_pst = {"x": 990, "y": 215}
+CHROME_VERSION = "123.0.6312.58"
