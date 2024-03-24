@@ -25,7 +25,12 @@ def main(url: str):
             with open(file, mode="r") as f:
                 html = f.read()
 
-            parse_html(html, f"{file.stem}.txt")
+            parse_html(
+                html,
+                f"{file.stem}.txt",
+                name="div",
+                id="b3-b4-b1-InjectHTMLWrapper",
+            )
 
 
 if __name__ == "__main__":

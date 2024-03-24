@@ -147,8 +147,19 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
     driver.quit()
 
 
-def parse_html(html: str, file_name: str):
-    """Extract useful content from a html file and save it as a txt file"""
+def parse_html(html: str, file_name: str, **kwargs):
+    """Extract useful content from a html file and save it as a txt file
+
+    Args:
+    ---
+    - html: The html file that will be handled by `html.parser`
+    - file_name: The txt file to write the results of parsing the html
+    - kwargs: kwargs to pass to `soup.find_all()`
+
+    Returns
+    ---
+    Writes the parsed content to a txt file
+    """
 
     print(f"Converting to text {file_name}...")
 
@@ -159,7 +170,7 @@ def parse_html(html: str, file_name: str):
     converter.ignore_images = True
     converter.ignore_tables = True
 
-    content = soup.find("div", id="b3-b4-b1-InjectHTMLWrapper")
+    content = soup.find_all(**kwargs)
 
     text = converter.handle(str(content))
 
