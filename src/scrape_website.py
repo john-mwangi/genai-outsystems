@@ -45,8 +45,12 @@ def install_driver(browser: str = "firefox") -> Union[tuple[str, str], None]:
 
     lines = result.stdout.splitlines()
 
-    driver_path = [line for line in lines if line.startswith("INFO\tDriver path:")]
-    browser_path = [line for line in lines if line.startswith("INFO\tBrowser path:")]
+    driver_path = [
+        line for line in lines if line.startswith("INFO\tDriver path:")
+    ]
+    browser_path = [
+        line for line in lines if line.startswith("INFO\tBrowser path:")
+    ]
 
     if driver_path:
         driver_clean = clean_path(driver_path[0])
@@ -96,7 +100,11 @@ def extract_react_html(url: str, page_load_time: int = params.PAGE_LOAD_TIME):
 
     # Open devtools
     # https://pyautogui.readthedocs.io/en/latest/keyboard.html#keyboard-keys
-    cmd_ctrl = ["command", "option"] if sys.platform == "darwin" else ["ctrl", "shift"]
+    cmd_ctrl = (
+        ["command", "option"]
+        if sys.platform == "darwin"
+        else ["ctrl", "shift"]
+    )
 
     with pyautogui.hold(cmd_ctrl):
         pyautogui.press("i")
@@ -169,7 +177,9 @@ def parse_html(html: str, file_name: str):
 def page_parsed(page_name: str, content_type: ContentType):
     """Determines if a url's html content has been extracted or converted to text"""
 
-    file_extension = content_type.value.__str__().split("/")[-1][: -len("_files")]
+    file_extension = content_type.value.__str__().split("/")[-1][
+        : -len("_files")
+    ]
     dir_name = content_type.value
 
     files = dir_name.glob(f"*.{file_extension}")
